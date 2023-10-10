@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import {register} from 'swiper/element/bundle';
 
-import { Product } from './models/product.model';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +11,9 @@ export class AppComponent {
   imgParent = '';
   showImg = true;
 
+  constructor() {
+    register()
+  }
 
   onLoaded(img: string) {
     console.log('log padre', img);
