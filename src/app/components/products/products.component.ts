@@ -42,7 +42,6 @@ export class ProductsComponent implements OnInit {
   ngOnInit(): void {
     this.productsService.getAllProducts(this.limit, this.offset)
       .subscribe(data => {
-        console.log('data => ', data)
         this.products = data;
         this.offset += this.limit
       });
