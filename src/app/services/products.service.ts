@@ -18,7 +18,7 @@ export class ProductsService {
   }
 
   getProduct(id: string){
-    return this.http.get<Product>(this.apiUrl + '/' + id)
+    return this.http.get<Product>(`${this.apiUrl}/${id}`)
   }
 
   create(dto: CreateProductDTO){
@@ -27,5 +27,9 @@ export class ProductsService {
 
   update(id: string, dto: UpdateProductDTO){
     return this.http.put<Product>(`${this.apiUrl}/${id}`, dto)
+  }
+
+  delete(id: string){
+    return this.http.delete<boolean>(`${this.apiUrl}/${id}`)
   }
 }
