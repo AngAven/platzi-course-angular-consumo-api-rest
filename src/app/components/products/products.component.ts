@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { Product, CreateProductDTO } from '../../models/product.model';
+import { Product, CreateProductDTO, UpdateProductDTO } from '../../models/product.model';
 
 import { StoreService } from '../../services/store.service';
 import { ProductsService } from '../../services/products.service';
@@ -16,6 +16,17 @@ export class ProductsComponent implements OnInit {
   total = 0;
   products: Product[] = [];
   showProductDetail = false
+  productChosen: Product = {
+    id: '',
+    price: 0,
+    images: [],
+    title: '',
+    category: {
+      id: '',
+      name: ''
+    },
+    description: ''
+  };
 
   constructor(
     private storeService: StoreService,
@@ -45,7 +56,9 @@ export class ProductsComponent implements OnInit {
     console.log('id => ', id)
     this.productsService.getProduct(id)
     .subscribe(data => {
-      console.log('product => ', data)
+      console.log('product chosen => ', data)
+      this.toggleProductDetail()
+      this.productChosen = data
     })
   }
 
@@ -62,6 +75,21 @@ export class ProductsComponent implements OnInit {
     .subscribe(data => {
       console.log('Response create product', data)
       this.products.unshift(data)
+    })
+  }
+
+  updateProduct(){
+    const changes: UpdateProductDTO = {
+      title: 'nuevo título'
+    }
+
+    const id = this.productChosen.id
+
+    this.productsService.update(id, changes)
+    .subscribe(dto => {
+      console.log('updated => ', dto)
+      const productIndex = this.products.findIndex(item => item.id === this.productChosen.id)
+      this.products[productIndex] = dto
     })
   }
 }

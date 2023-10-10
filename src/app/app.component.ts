@@ -1,6 +1,4 @@
 import { Component } from '@angular/core';
-import {register} from 'swiper/element/bundle';
-
 
 @Component({
   selector: 'app-root',
@@ -12,7 +10,6 @@ export class AppComponent {
   showImg = true;
 
   constructor() {
-    register()
   }
 
   onLoaded(img: string) {
