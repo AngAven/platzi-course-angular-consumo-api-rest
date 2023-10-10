@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
-import { Product, CreateProductDTO, UpdateProductDTO } from '../../models/product.model';
+import {Product, CreateProductDTO, UpdateProductDTO} from '../../models/product.model';
 
-import { StoreService } from '../../services/store.service';
-import { ProductsService } from '../../services/products.service';
+import {StoreService} from '../../services/store.service';
+import {ProductsService} from '../../services/products.service';
 
 @Component({
   selector: 'app-products',
@@ -30,6 +30,7 @@ export class ProductsComponent implements OnInit {
 
   limit = 10
   offset = 0
+  statusDetail: 'loading' | 'succes' | 'init' | 'error' = 'init'
 
   constructor(
     private storeService: StoreService,
@@ -40,11 +41,11 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.productsService.getAllProducts(this.limit, this.offset)
-    .subscribe(data => {
-      console.log('data => ', data)
-      this.products = data;
-      this.offset += this.limit
-    });
+      .subscribe(data => {
+        console.log('data => ', data)
+        this.products = data;
+        this.offset += this.limit
+      });
   }
 
   onAddToShoppingCart(product: Product) {
@@ -52,21 +53,26 @@ export class ProductsComponent implements OnInit {
     this.total = this.storeService.getTotal();
   }
 
-  toggleProductDetail(){
+  toggleProductDetail() {
     this.showProductDetail = !this.showProductDetail
   }
 
-  onShowDetail(id: string){
+  onShowDetail(id: string) {
+    this.statusDetail = 'loading'
+    this.toggleProductDetail()
     console.log('id => ', id)
     this.productsService.getProduct(id)
-    .subscribe(data => {
-      console.log('product chosen => ', data)
-      this.toggleProductDetail()
-      this.productChosen = data
-    })
+      .subscribe(data => {
+        console.log('product chosen => ', data)
+        this.productChosen = data
+        this.statusDetail = 'succes'
+      }, response => {
+        console.log(response)
+        this.statusDetail = 'error'
+      })
   }
 
-  createNewProduct(){
+  createNewProduct() {
     const product: CreateProductDTO = {
       title: 'nuevo producto',
       description: 'aqui esta la descripción',
@@ -76,13 +82,13 @@ export class ProductsComponent implements OnInit {
 
     }
     this.productsService.create(product)
-    .subscribe(data => {
-      console.log('Response create product', data)
-      this.products.unshift(data)
-    })
+      .subscribe(data => {
+        console.log('Response create product', data)
+        this.products.unshift(data)
+      })
   }
 
-  updateProduct(){
+  updateProduct() {
     const changes: UpdateProductDTO = {
       title: 'nuevo título'
     }
@@ -90,26 +96,26 @@ export class ProductsComponent implements OnInit {
     const id = this.productChosen.id
 
     this.productsService.update(id, changes)
-    .subscribe(dto => {
-      console.log('updated => ', dto)
-      const productIndex = this.products.findIndex(item => item.id === this.productChosen.id)
-      this.products[productIndex] = dto
-      this.productChosen = dto
-    })
+      .subscribe(dto => {
+        console.log('updated => ', dto)
+        const productIndex = this.products.findIndex(item => item.id === this.productChosen.id)
+        this.products[productIndex] = dto
+        this.productChosen = dto
+      })
   }
 
-  deleteProduct(){
+  deleteProduct() {
     const id = this.productChosen.id
     this.productsService.delete(id)
-    .subscribe(data => {
-      console.log('eliminado => ', data)
-      const productIndex = this.products.findIndex(item => item.id === id)
-      this.products.splice(productIndex, 1)
-      this.showProductDetail = false
-    })
+      .subscribe(data => {
+        console.log('eliminado => ', data)
+        const productIndex = this.products.findIndex(item => item.id === id)
+        this.products.splice(productIndex, 1)
+        this.showProductDetail = false
+      })
   }
 
-  loadMore(){
+  loadMore() {
     this.productsService.getPRroductsByPage(this.limit, this.offset)
       .subscribe(data => {
         this.products = this.products.concat(data)
