@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http'
+import {HttpClient, HttpHeaders} from '@angular/common/http'
 import {environment} from "../../environments/environment";
 import {Auth} from '../models/auth.model'
+import {User} from "../models/user.model";
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +20,12 @@ export class AuthService {
     return this.http.post<Auth>(`${this.apiUrl}/login`, {email, password})
   }
 
-  profile() {
-    return this.http.get(`${this.apiUrl}/profile`)
+  profile(token: string) {
+    console.log(token)
+    let headers = new HttpHeaders()
+    headers = headers.set('Authorization', `Bearer ${token}`)
+
+    return this.http.get<User>(`https://api.escuelajs.co/api/v1/auth/profile`, {headers}
+    )
   }
 }

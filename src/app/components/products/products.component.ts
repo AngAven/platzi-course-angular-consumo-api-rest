@@ -75,10 +75,26 @@ export class ProductsComponent implements OnInit {
 
   readAndUpdate(id: string) {
     this.productsService.getProduct(id)
-      .pipe(switchMap((product) => this.productsService.update(product.id, {title: 'changed'}) ))
-    .subscribe(data => {
-      console.log(data)
-    })
+      .pipe(
+        // se pueden ir encadenando los switch map tomando los datos resultantes del anterior
+        switchMap((product) => this.productsService.update(product.id, {title: 'changed'}))
+        // switchMap((product) => this.productsService.update(product.id, {title: 'changed'}) ),
+        // switchMap((product) => this.productsService.update(product.id, {title: 'changed'}) )
+      )
+      .subscribe(data => {
+        console.log(data)
+      })
+
+    // Ejecutar dos observables que no tienen deoendencias
+    zip(
+      this.productsService.getProduct(id),
+      this.productsService.update(id, {title: 'nuevo título'})
+    )
+      .subscribe(response => {
+        //Se obtiene la respuesta de las dos mediante un arreglo
+        const read = response[0]
+        const update = response[1]
+      })
   }
 
   createNewProduct() {

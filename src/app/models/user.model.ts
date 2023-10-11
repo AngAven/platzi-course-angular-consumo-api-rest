@@ -1,5 +1,3 @@
-import {Category} from "./product.model";
-
 export interface User {
   id: string;
   email: string;
@@ -10,5 +8,4 @@ export interface User {
 }
 
 export interface CreateUserDTO extends Omit<User, 'id'>{
-
 }
