@@ -11,7 +11,6 @@ import {User} from "../../models/user.model";
 })
 export class NavComponent implements OnInit {
 
-  token = ''
   profile: User | null = null
   activeMenu = false;
   counter = 0;
@@ -34,14 +33,13 @@ export class NavComponent implements OnInit {
   login() {
     this.authService.login('angelin1@gmail.com','12345')
       .subscribe(rta => {
-        this.token = rta.access_token
         console.log('rta login => ', rta)
         this.getprofile()
       })
   }
 
   getprofile(){
-    this.authService.profile(this.token)
+    this.authService.profile()
     .subscribe(user => {
       this.profile = user
     })
