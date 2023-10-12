@@ -15,6 +15,12 @@
     descargar blob
   </button>
 </p>
+<p>
+  <label>upload</label>
+  <input type="file" (change)="onUpload($event)" name="upload">
+  <img *ngIf="imgRTA" [src]="imgRTA" alt="imagen" width="200px">
+</p>
+<p *ngIf="statusDetail === 'loading' ">Loading.....</p>
 <hr>
 <br>
 
